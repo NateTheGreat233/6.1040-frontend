@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [vue()],
   base: "/",
   resolve: {
+    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
     alias: {
       "@": join(__dirname, "client"),
     },

@@ -15,9 +15,12 @@ export const useUserStore = defineStore(
     };
 
     const createUser = async (username: string, password: string) => {
-      await fetchy("/api/users", "POST", {
+      const response = await fetchy("/api/users", "POST", {
         body: { username, password },
       });
+      console.log(response);
+      // const newCometChatUser = new CometChat.User('sdf');
+      // await CometChat.createUser(newCometChatUser, process.env.COMET_CHAT_API_KEY as string);
     };
 
     const loginUser = async (username: string, password: string) => {
@@ -36,7 +39,7 @@ export const useUserStore = defineStore(
     };
 
     const logoutUser = async () => {
-      await fetchy("/api/logout", "POST");
+      await fetchy("/api/logout", "POST", { alert: false });
       resetStore();
     };
 

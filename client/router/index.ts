@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/user";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import RelationshipView from "../views/RelationshipView.vue";
 import SettingView from "../views/SettingView.vue";
 
 const router = createRouter({
@@ -19,6 +20,12 @@ const router = createRouter({
       path: "/setting",
       name: "Settings",
       component: SettingView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/relationship",
+      name: "Relationship",
+      component: RelationshipView,
       meta: { requiresAuth: true },
     },
     {
@@ -48,7 +55,7 @@ router.beforeEach((to, from) => {
   const { isLoggedIn } = storeToRefs(useUserStore());
 
   if (to.meta.requiresAuth && !isLoggedIn.value) {
-    return { name: "Login" };
+    return { name: "Home" };
   }
 });
 

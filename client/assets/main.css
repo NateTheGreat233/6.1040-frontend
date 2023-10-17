@@ -2,7 +2,11 @@
 
 :root {
   --red: rgb(208, 67, 12);
-  --base-bg: #f1f3f5;
+  --pink: #FFFDFF;
+  --red: #F2A3A3;
+  --dark-red: #ed9090;
+  --nav-bar-height: 100px;
+  --page-side-padding: 50px;
 }
 
 button.btn-small {
@@ -29,4 +33,59 @@ a.button {
   justify-content: center;
   align-items: center;
   gap: 1em;
+}
+
+header {
+  height: var(--nav-bar-height);
+  width: 100%;
+}
+
+body {
+  height: 100vh;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  
+}
+
+/* #app {
+  height: calc(100vh - 100px);
+} */
+
+body {
+  background-color: var(--pink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'DM Sans';
+  font-weight: 400;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.huge-text {
+  font-size: 75px;
+}
+
+.large-text {
+  font-size: 50px;
+}
+
+.medium-text {
+  font-size: 30px;
+}
+
+.small-text {
+  font-size: 18px;
 }
