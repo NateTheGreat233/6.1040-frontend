@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { watchEffect } from "vue";
 import LoginModal from "../components/Modal/LoginModal.vue";
+import SignUpModal from "../components/Modal/SignUpModal.vue";
 import router from "../router";
 import { useSiteStore } from "../stores/site";
 
@@ -13,13 +14,13 @@ const siteStore = useSiteStore();
 
 const signUp = (): void => {
   siteStore.setIsSigningUp(true);
-}
+};
 
 watchEffect(() => {
   if (isLoggedIn) {
-    router.push({ name: 'Relationship' });
+    router.push({ name: "Relationship" });
   }
-})
+});
 </script>
 
 <template>
@@ -27,16 +28,22 @@ watchEffect(() => {
     <div class="container">
       <div class="left-container">
         <h1 class="title bold huge-text">Stay Connected</h1>
-        <h2 class="medium-text blurb">Duet is built for long distance couples. Going beyond simple video calling, Duet allows you and your significant other to connect on a deeper level by allowing you to keep a virtual scrapbook, engage with each other using fun conversation prompts, and even share important milestones with the world!</h2>
+        <h2 class="medium-text blurb">
+          Duet is built for long distance couples. Going beyond video calling, Duet allows you and your significant other to connect on a deeper level through a virtual scrapbook, fun conversation
+          prompts, and the ability to share important milestones with the world!
+        </h2>
         <h2 class="medium-text">Start your Duet today!</h2>
-        <DuetButton :text="'Get Started'" :onClick="signUp" :width="'200px'" :height="'75px'" />
+        <DuetButton :text="'Get Started'" :onClick="signUp" :width="'200px'" :height="'60px'" />
       </div>
       <div class="right-container">
-        <img class="front-image" src="@/assets/images/homepage.png" />
+        <img class="front-image" src="@/assets/images/homepage.png" draggable="false" />
       </div>
     </div>
-    <div v-if="siteStore.isLoggingIn || siteStore.isSigningUp">
+    <div v-if="siteStore.isLoggingIn">
       <LoginModal />
+    </div>
+    <div v-else-if="siteStore.isSigningUp">
+      <SignUpModal />
     </div>
   </main>
 </template>
@@ -50,7 +57,8 @@ watchEffect(() => {
   justify-content: space-around;
   padding-left: var(--page-side-padding);
   padding-right: var(--page-side-padding);
-  padding-top: 100px;
+  box-sizing: border-box;
+  padding-top: 35px;
 }
 
 .blurb {
@@ -71,17 +79,17 @@ main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
-  width: 50%;
+  justify-content: flex-start;
+  width: 70%;
   max-height: 100%;
-  padding: 0px 50px 100px 50px;
+  padding: 0px 50px 50px 50px;
 }
 
 .right-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-width: 50%;
+  min-width: 30%;
 }
 
 .front-image {

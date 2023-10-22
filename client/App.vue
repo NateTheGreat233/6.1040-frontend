@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import router from '@/router';
+import router from "@/router";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
 import { CometChat } from "@cometchat-pro/chat";
@@ -8,9 +8,9 @@ import { computed, onBeforeMount, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import Navbar from "./components/Navbar/Navbar.vue";
 import Sidebar from "./components/Sidebar/Sidebar.vue";
-import { useDualProfileStore } from './stores/dualProfile';
-import { useExclusiveFriendStore } from './stores/exclusiveFriend';
-import { useProfileStore } from './stores/profile';
+import { useDualProfileStore } from "./stores/dualProfile";
+import { useExclusiveFriendStore } from "./stores/exclusiveFriend";
+import { useProfileStore } from "./stores/profile";
 import { useSiteStore } from "./stores/site";
 
 const currentRoute = useRoute();
@@ -18,7 +18,7 @@ const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
 const siteStore = useSiteStore();
 const { isLoggedIn, currentUsername } = storeToRefs(userStore);
-const { fetchExclusiveFriend } = useExclusiveFriendStore();
+const { fetchExclusiveFriend, fetchRequestedExclusiveFriend } = useExclusiveFriendStore();
 const { fetchProfile } = useProfileStore();
 const { fetchDualProfile } = useDualProfileStore();
 const { toast } = storeToRefs(useToastStore());
@@ -35,33 +35,31 @@ onBeforeMount(async () => {
 
 watchEffect(() => {
   if (!isLoggedIn.value) {
-    router.push({ name: 'Home' });
+    router.push({ name: "Home" });
   }
 });
 
 watchEffect(async () => {
   if (isLoggedIn.value) {
-    await CometChat.login("SUPERHERO1", import.meta.env.VITE_COMET_CHAT_API_KEY);
-    await fetchExclusiveFriend();
-    await fetchProfile(currentUsername.value);
-    await fetchDualProfile();
+    const actionsToComplete = [
+      CometChat.login("SUPERHERO1", import.meta.env.VITE_COMET_CHAT_API_KEY),
+      fetchExclusiveFriend(),
+      fetchRequestedExclusiveFriend(),
+      fetchProfile(currentUsername.value),
+      fetchDualProfile(),
+    ];
+    await Promise.all(actionsToComplete);
   }
-})
-
+});
 
 const initialize = () => {
   siteStore.setIsLoggingIn(false);
   siteStore.setIsSigningUp(false);
 
-  const cometChatSettings: CometChat.AppSettings = new CometChat.AppSettingsBuilder()
-    .subscribePresenceForAllUsers()
-    .setRegion('US')
-    .autoEstablishSocketConnection(true)
-    .build();
+  const cometChatSettings: CometChat.AppSettings = new CometChat.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion("US").autoEstablishSocketConnection(true).build();
 
   void CometChat.init(import.meta.env.VITE_COMET_CHAT_APP_ID, cometChatSettings);
-}
-
+};
 </script>
 
 <template>
@@ -81,8 +79,8 @@ const initialize = () => {
 @import "./assets/toast.css";
 
 @font-face {
-  font-family: 'DM Sans';
-  src: url('./assets/fonts/DMSans.ttf');
+  font-family: "DM Sans";
+  src: url("./assets/fonts/DMSans.ttf");
 }
 
 .page-layout {

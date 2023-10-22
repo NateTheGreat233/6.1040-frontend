@@ -20,7 +20,7 @@ export default class ExclusiveFriendConcept {
     if (from.toString() === to.toString()) {
       throw new NotAllowedError("You cannot request yourself!");
     }
-    
+
     let numWithFriend = 0;
     try {
       await this.getExclusiveFriend(from);
@@ -30,7 +30,7 @@ export default class ExclusiveFriendConcept {
       await this.getExclusiveFriend(to);
       numWithFriend += 1;
     } catch (e) {}
-    
+
     if (numWithFriend > 0) {
       throw new NotAllowedError("Either you or the person you are requesting already has an exclusive friend. You can only have 1 at a time.");
     }
@@ -79,5 +79,14 @@ export default class ExclusiveFriendConcept {
     }
 
     return friendship.user1.toString() === user.toString() ? friendship.user2 : friendship.user1;
+  }
+
+  public async getRequestedFriend(user: ObjectId) {
+    const requested = await this.requests.readOne({ from: user });
+    if (requested === null) {
+      throw new NotFoundError("You have not requested anyone");
+    }
+
+    return requested.to;
   }
 }

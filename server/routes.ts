@@ -7,10 +7,9 @@ import { ProfileDoc } from "./concepts/profile";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 
-type Image = { buffer: string, mimeType: string };
+type Image = { buffer: string; mimeType: string };
 
 class Routes {
-
   // ********** PROFILE ROUTES **********
 
   @Router.get("/profile/:username")
@@ -51,7 +50,7 @@ class Routes {
   async addToScrapbook(session: WebSessionDoc, caption: string, image: Image, date: Date) {
     const imageData = new Uint8Array(Object.values(JSON.parse(image.buffer)));
     const user = WebSession.getUser(session);
-    return await DualProfile.addToScrapbook(user, { image: {...image, buffer: imageData }, caption, date });
+    return await DualProfile.addToScrapbook(user, { image: { ...image, buffer: imageData }, caption, date });
   }
 
   // ********** DUAL POST ROUTES **********
@@ -119,6 +118,14 @@ class Routes {
     return await ExclusiveFriend.getExclusiveFriend(user);
   }
 
+  @Router.get("/exclusiveFriend/requested")
+  async getRequestedFriend(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    const requestedUser = await ExclusiveFriend.getRequestedFriend(user);
+    const requestedUsername = await User.getUserById(requestedUser);
+    return requestedUsername.username;
+  }
+
   @Router.post("/exclusiveFriend/request/:to")
   async requestExclusiveFriend(session: WebSessionDoc, to: string) {
     const user = WebSession.getUser(session);
@@ -144,7 +151,10 @@ class Routes {
   async removeExclusiveFriend(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
     const { posts } = await DualPost.getDualPostsFromAuthor(user);
-    await DualPost.delete(posts.map((post) => post._id), user);
+    await DualPost.delete(
+      posts.map((post) => post._id),
+      user,
+    );
     await DualProfile.deleteDualProfile(user);
     return await ExclusiveFriend.removeExclusiveFriend(user);
   }
@@ -197,9 +207,14 @@ class Routes {
     const user = WebSession.getUser(session);
     WebSession.end(session);
     Profile.deleteProfile(user);
-    try { await ExclusiveFriend.removeExclusiveFriend(user) } catch (e) {};
+    try {
+      await ExclusiveFriend.removeExclusiveFriend(user);
+    } catch (e) {}
     const { posts } = await DualPost.getDualPostsFromAuthor(user);
-    await DualPost.delete(posts.map((post) => post._id), user);
+    await DualPost.delete(
+      posts.map((post) => post._id),
+      user,
+    );
     await DualProfile.deleteDualProfile(user);
     await ConversationPrompt.deleteCache(user);
     return await User.delete(user);

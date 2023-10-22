@@ -1,52 +1,74 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { defineProps, ref, toRefs } from "vue";
 
-const { onClick, text, width, height } = defineProps<{
-    onClick: () => void;
-    text: string;
-    width?: string;
-    height?: string;
+const props = defineProps<{
+  onClick: () => void;
+  text: string;
+  width?: string;
+  height?: string;
+  isDisabled?: boolean;
 }>();
 
-const defaultWidth = '100px';
-const defaultHeight = '50px';
-const actualWidth = ref(width ?? defaultWidth);
-const actualHeight = ref(height ?? defaultHeight);
+const { onClick, text, width, height, isDisabled } = toRefs(props);
 
-function goHome() {
-    onClick();
-}
+const defaultWidth = "100px";
+const defaultHeight = "50px";
+const actualWidth = ref<string>(width?.value ?? defaultWidth);
+const actualHeight = ref<string>(height?.value ?? defaultHeight);
 
+const executeAction = () => {
+  if (isDisabled.value) return;
+  onClick.value();
+};
 </script>
 
 <template>
-    <div class="button-container" @click="goHome">
-        <h1 class="text bold small-text">{{ text }}</h1>
-    </div>
+  <div class="button-container" :class="{ disabled: isDisabled }" v-on:click="executeAction">
+    <h1 class="text bold small-text">{{ text }}</h1>
+  </div>
 </template>
 
 <style scoped>
-
 .button-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 15px;
-    width: v-bind(actualWidth);
-    height: v-bind(actualHeight);
-    padding: 0px;
-    background-color: var(--red);
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 15px;
+  min-width: v-bind(actualWidth);
+  max-width: v-bind(actualWidth);
+  min-height: v-bind(actualHeight);
+  max-height: v-bind(actualHeight);
+  padding: 0px;
+  background-color: var(--red);
 }
 
-.container:hover {
-    background-color: var(--dark-red);
+.button-container:hover {
+  background-color: var(--dark-red);
+  cursor: pointer;
+}
+
+.button-container:active {
+  background-color: var(--darker-red);
+}
+
+.disabled {
+  background-color: var(--disabled-color);
+}
+
+.disabled:hover {
+  background-color: var(--disabled-color);
+  cursor: initial;
+}
+
+.disabled:active {
+  background-color: var(--disabled-color);
 }
 
 .text {
-    margin: 0px;
-    text-align: center;
+  margin: 0px;
+  user-select: none;
+  text-align: center;
 }
 </style>

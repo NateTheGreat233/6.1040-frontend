@@ -8,14 +8,15 @@ export const useDualProfileStore = defineStore(
     const startDate = ref<Date>(new Date());
 
     const fetchDualProfile = async (): Promise<void> => {
-      console.log("fetching");
       const response = await fetchy("/api/dualProfile", "GET", { alert: false });
-      console.log(response);
     };
+
+    const resetStore = (): void => {};
 
     return {
       startDate,
       fetchDualProfile,
+      resetStore,
     };
   },
   { persist: true },

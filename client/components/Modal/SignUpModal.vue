@@ -1,45 +1,53 @@
 <script setup lang="ts">
-import router from "@/router";
 import { useSiteStore } from "@/stores/site";
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
+import router from "../../router";
 import DuetButton from "../DuetButton/DuetButton.vue";
 
 const username = ref("");
 const password = ref("");
-const { loginUser, updateSession } = useUserStore();
+const name = ref("");
+const { loginUser, createUser, updateSession } = useUserStore();
 const { setIsSigningUp, setIsLoggingIn } = useSiteStore();
 
-async function login() {
+const signUp = async () => {
+  await createUser(username.value, password.value);
   await loginUser(username.value, password.value);
   await updateSession();
-  setIsLoggingIn(false);
   setIsSigningUp(false);
+  setIsLoggingIn(false);
   router.push({ name: "Relationship" });
-}
+};
+
+const isDisabled = ![username, password, name].every((ref) => ref.value.length > 0);
 
 function goBack() {
   setIsLoggingIn(false);
   setIsSigningUp(false);
 }
-
-const isDisabled = ref(![username, password].every((ref) => ref.value.length > 0));
 </script>
 
 <template>
   <div class="container" @click="goBack">
     <div class="content" v-on:click.stop>
-      <h1 class="large-text">Login</h1>
-      <div class="column">
-        <input v-model.trim="username" type="text" class="textField" id="aligned-name" placeholder="Username" required />
-        <input type="password" v-model.trim="password" class="textField" id="aligned-password" placeholder="Password" required />
+      <h1 class="large-text">Get Started</h1>
+      <div class="input-container">
+        <input v-model.trim="name" class="textField" type="text" placeholder="Name" />
+        <input v-model.trim="username" class="textField" type="text" placeholder="Username" />
+        <input type="password" class="textField" v-model.trim="password" placeholder="Password" />
       </div>
-      <DuetButton :text="'Login'" :width="'200px'" :onClick="login" :isDisabled="isDisabled" />
+      <DuetButton :text="'Sign Up'" :width="'200px'" :onClick="signUp" :isDisabled="!isDisabled" />
     </div>
   </div>
 </template>
 
 <style scoped>
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
   position: absolute;
   display: flex;
@@ -62,10 +70,12 @@ const isDisabled = ref(![username, password].every((ref) => ref.value.length > 0
   border-width: 2px;
   border-color: black;
   border-style: solid;
-  width: 50%;
-  height: 90%;
   box-sizing: border-box;
   padding: 10px 0px 50px 0px;
+  width: 50%;
+  height: 90%;
+  min-width: 400px;
+  min-height: 480px;
   background-color: white;
 }
 </style>
