@@ -18,6 +18,7 @@ const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
 const siteStore = useSiteStore();
 const { isLoggedIn, currentUsername } = storeToRefs(userStore);
+const { modalVisible } = storeToRefs(siteStore);
 const { fetchExclusiveFriend, fetchRequestedExclusiveFriend } = useExclusiveFriendStore();
 const { fetchProfile } = useProfileStore();
 const { fetchDualProfile } = useDualProfileStore();
@@ -29,14 +30,20 @@ onBeforeMount(async () => {
   try {
     await userStore.updateSession();
   } catch {
-    // User is not logged in
+    // User is not logged in, that's fine
   }
 });
 
+// checks for login state and pushes to home when user logs in
 watchEffect(() => {
   if (!isLoggedIn.value) {
     router.push({ name: "Home" });
   }
+});
+
+// makes the page unscrollable when a modal is open
+watchEffect(() => {
+  document.documentElement.style.overflowY = modalVisible.value ? "hidden" : "auto";
 });
 
 watchEffect(async () => {
@@ -48,7 +55,9 @@ watchEffect(async () => {
       fetchProfile(currentUsername.value),
       fetchDualProfile(),
     ];
-    await Promise.all(actionsToComplete);
+    try {
+      await Promise.all(actionsToComplete);
+    } catch {}
   }
 });
 
@@ -90,15 +99,6 @@ const initialize = () => {
   flex-direction: row;
 }
 
-/* nav {
-  background-color: white;
-  display: flex;
-  position: fixed;
-  width: 100%;
-  top: 0px;
-  align-items: center;
-} */
-
 h1 {
   font-size: 2em;
   margin: 0;
@@ -109,15 +109,6 @@ h1 {
   align-items: center;
   gap: 0.5em;
 }
-
-/* img {
-  height: 2em;
-} */
-
-/* header {
-  background-color: red;
-  height: 100vh;
-} */
 
 a {
   font-size: large;

@@ -32,7 +32,7 @@ export default class ExclusiveFriendConcept {
     } catch (e) {}
 
     if (numWithFriend > 0) {
-      throw new NotAllowedError("Either you or the person you are requesting already has an exclusive friend. You can only have 1 at a time.");
+      throw new NotAllowedError("The person you are requesting already has connected with their significant other.");
     }
 
     // check to see if this user has already requested someone

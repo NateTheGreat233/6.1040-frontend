@@ -33,7 +33,7 @@ watchEffect(() => {
           prompts, and the ability to share important milestones with the world!
         </h2>
         <h2 class="medium-text">Start your Duet today!</h2>
-        <DuetButton :text="'Get Started'" :onClick="signUp" :width="'200px'" :height="'60px'" />
+        <DuetButton :text="'Get Started'" :onClick="signUp" :width="'200px'" :height="'60px'" :variant="'important'" />
       </div>
       <div class="right-container">
         <img class="front-image" src="@/assets/images/homepage.png" draggable="false" />

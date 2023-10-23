@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { BodyT, fetchy } from "@/utils/fetchy";
+import { CometChat } from "@cometchat-pro/chat";
 
 export const useUserStore = defineStore(
   "user",
@@ -14,24 +15,26 @@ export const useUserStore = defineStore(
       currentUsername.value = "";
     };
 
-    const createUser = async (username: string, password: string) => {
-      const response = await fetchy("/api/users", "POST", {
-        body: { username, password },
+    const createUser = async (name: string, username: string, password: string) => {
+      await fetchy("/api/users", "POST", {
+        body: { name, username, password },
       });
-      console.log(response);
-      // const newCometChatUser = new CometChat.User('sdf');
-      // await CometChat.createUser(newCometChatUser, process.env.COMET_CHAT_API_KEY as string);
+      const newCometChatUser = new CometChat.User(username);
+      newCometChatUser.setName(name);
+      await CometChat.createUser(newCometChatUser, import.meta.env.VITE_COMET_CHAT_API_KEY);
     };
 
     const loginUser = async (username: string, password: string) => {
       await fetchy("/api/login", "POST", {
         body: { username, password },
       });
+      await CometChat.login(username, import.meta.env.VITE_COMET_CHAT_API_KEY);
     };
 
     const updateSession = async () => {
       try {
         const { username } = await fetchy("/api/session", "GET", { alert: false });
+        await CometChat.login(username, import.meta.env.VITE_COMET_CHAT_API_KEY);
         currentUsername.value = username;
       } catch {
         currentUsername.value = "";

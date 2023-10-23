@@ -2,9 +2,11 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+import EditRelationshipView from "../views/EditRelationshipView.vue";
 import FeedView from "../views/FeedView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import MyPostsView from "../views/MyPostsView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import RelationshipView from "../views/RelationshipView.vue";
 import SettingView from "../views/SettingView.vue";
@@ -27,6 +29,18 @@ const router = createRouter({
       path: "/relationship",
       name: "Relationship",
       component: RelationshipView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/relationship/edit",
+      name: "Edit Relationship",
+      component: EditRelationshipView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/my-posts",
+      name: "My Posts",
+      component: MyPostsView,
       meta: { requiresAuth: true },
     },
     {

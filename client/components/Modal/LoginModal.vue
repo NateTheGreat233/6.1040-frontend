@@ -2,7 +2,7 @@
 import router from "@/router";
 import { useSiteStore } from "@/stores/site";
 import { useUserStore } from "@/stores/user";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import DuetButton from "../DuetButton/DuetButton.vue";
 
 const username = ref("");
@@ -23,36 +23,23 @@ function goBack() {
   setIsSigningUp(false);
 }
 
-const isDisabled = ref(![username, password].every((ref) => ref.value.length > 0));
+const isDisabled = computed(() => ![username, password].every((ref) => ref.value.length > 0));
 </script>
 
 <template>
-  <div class="container" @click="goBack">
+  <div class="modal-container" @click="goBack">
     <div class="content" v-on:click.stop>
       <h1 class="large-text">Login</h1>
       <div class="column">
         <input v-model.trim="username" type="text" class="textField" id="aligned-name" placeholder="Username" required />
         <input type="password" v-model.trim="password" class="textField" id="aligned-password" placeholder="Password" required />
       </div>
-      <DuetButton :text="'Login'" :width="'200px'" :onClick="login" :isDisabled="isDisabled" />
+      <DuetButton :text="'Login'" :width="'200px'" :onClick="login" :isDisabled="isDisabled" :variant="'important'" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.container {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: hsla(0, 0%, 0%, 0.5);
-}
-
 .content {
   display: flex;
   flex-direction: column;

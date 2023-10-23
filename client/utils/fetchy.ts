@@ -1,7 +1,7 @@
 import { useToastStore } from "../stores/toast";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-export type BodyT = string | number | boolean | null | BodyT[] | { [key: string]: BodyT };
+export type BodyT = string | number | Date | boolean | null | BodyT[] | { [key: string]: BodyT };
 
 /**
  * A wrapper around fetch that handles errors and alerts the messages to the user.
@@ -24,7 +24,7 @@ export async function fetchy(
   },
 ) {
   options = options ?? {};
-  options.alert = options.alert ?? true;
+  options.alert = options.alert ?? false;
 
   const queryString = new URLSearchParams(options.query).toString();
   const fullUrl = `${url}?${queryString}`;

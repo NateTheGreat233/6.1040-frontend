@@ -5,26 +5,27 @@ import Loading from "@/components/Loading/Loading.vue";
 import { useExclusiveFriendStore } from "@/stores/exclusiveFriend";
 import { storeToRefs } from "pinia";
 
-const { fetchingExclusiveFriend, exclusiveFriend } = storeToRefs(useExclusiveFriendStore());
+const { fetchingExclusiveFriend, exclusiveFriend, requestedFriend, errorMsg } = storeToRefs(useExclusiveFriendStore());
 </script>
 
 <template>
-  <main>
-    <div class="relationship-container">
-      <Loading v-if="fetchingExclusiveFriend !== false" :text="'Loading Your Relationship Details'" />
-      <CreateRelationship v-else-if="exclusiveFriend === undefined" />
-      <DualProfile v-else />
-    </div>
-  </main>
+  <div class="relationship-container">
+    <Loading v-if="fetchingExclusiveFriend !== false && requestedFriend === undefined && errorMsg === undefined" :text="'Loading Your Relationship Details'" />
+    <CreateRelationship v-else-if="exclusiveFriend === undefined" />
+    <DualProfile v-else />
+  </div>
 </template>
 
 <style scoped>
 .relationship-container {
-  width: calc(100% - var(--page-side-padding) * 2);
-  height: 100%;
+  width: calc(100% - var(--side-bar-width));
+  max-width: calc(100% - var(--side-bar-width));
+  max-width: 100%;
+  height: calc(100% - var(--nav-bar-height));
   max-height: 100%;
   padding-right: var(--page-side-padding);
   padding-left: var(--page-side-padding);
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   justify-content: space-around;

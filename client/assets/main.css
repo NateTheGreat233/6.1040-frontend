@@ -6,9 +6,15 @@
   --red: #f2a3a3;
   --dark-red: #ed9090;
   --darker-red: #e87373;
+  --lavender: #e4c6fc;
   --disabled-color: rgb(194, 194, 194);
   --nav-bar-height: 100px;
   --page-side-padding: 50px;
+  --side-bar-width: 250px;
+}
+
+.error-color {
+  color: red;
 }
 
 .textField {
@@ -110,4 +116,17 @@ img {
 
 .small-text {
   font-size: 18px;
+}
+
+.modal-container {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsla(0, 0%, 0%, 0.5);
 }

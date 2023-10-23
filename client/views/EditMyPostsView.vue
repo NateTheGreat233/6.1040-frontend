@@ -3,7 +3,7 @@
 <template>
   <main>
     <div class="container">
-      <h1 class="large-text bold">All Posts</h1>
+      <h1 class="large-text bold">Edit My Posts</h1>
     </div>
   </main>
 </template>

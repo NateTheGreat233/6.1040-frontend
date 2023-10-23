@@ -8,13 +8,9 @@ export const useProfileStore = defineStore(
     const name = ref<string>("");
     const exclusiveFriendName = ref<string>("");
 
-    const fetchProfile = async (username: string, personal?: boolean): Promise<void> => {
+    const fetchProfile = async (username: string): Promise<void> => {
       const result = (await fetchy(`/api/profile/${username}`, "GET", { alert: false })).profile.name;
-      if (!personal) {
-        exclusiveFriendName.value = result;
-      } else {
-        name.value = result;
-      }
+      name.value = result;
     };
 
     const resetStore = () => {

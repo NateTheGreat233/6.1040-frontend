@@ -34,7 +34,7 @@ onUnmounted(() => {
   <nav v-bind:style="pageScrolled.valueOf() ? 'border-bottom-width: 2px' : 'border-bottom-width: 0px'">
     <div class="title">
       <img src="@/assets/images/logo.png" class="logo" draggable="false" />
-      <h1>Duet</h1>
+      <h1 class="larg-text bold">Duet</h1>
     </div>
     <DuetButton v-if="!isLoggedIn" :text="'Login'" :onClick="goToLogin" :width="'200px'" :height="'50px'" />
   </nav>

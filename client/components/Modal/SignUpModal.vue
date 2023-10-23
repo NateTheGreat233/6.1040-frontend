@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useSiteStore } from "@/stores/site";
 import { useUserStore } from "@/stores/user";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import router from "../../router";
 import DuetButton from "../DuetButton/DuetButton.vue";
 
@@ -12,7 +12,7 @@ const { loginUser, createUser, updateSession } = useUserStore();
 const { setIsSigningUp, setIsLoggingIn } = useSiteStore();
 
 const signUp = async () => {
-  await createUser(username.value, password.value);
+  await createUser(name.value, username.value, password.value);
   await loginUser(username.value, password.value);
   await updateSession();
   setIsSigningUp(false);
@@ -20,7 +20,7 @@ const signUp = async () => {
   router.push({ name: "Relationship" });
 };
 
-const isDisabled = ![username, password, name].every((ref) => ref.value.length > 0);
+const isDisabled = computed(() => ![username, password].every((ref) => ref.value.length > 0));
 
 function goBack() {
   setIsLoggingIn(false);
@@ -29,7 +29,7 @@ function goBack() {
 </script>
 
 <template>
-  <div class="container" @click="goBack">
+  <div class="modal-container" @click="goBack">
     <div class="content" v-on:click.stop>
       <h1 class="large-text">Get Started</h1>
       <div class="input-container">
@@ -37,7 +37,7 @@ function goBack() {
         <input v-model.trim="username" class="textField" type="text" placeholder="Username" />
         <input type="password" class="textField" v-model.trim="password" placeholder="Password" />
       </div>
-      <DuetButton :text="'Sign Up'" :width="'200px'" :onClick="signUp" :isDisabled="!isDisabled" />
+      <DuetButton :text="'Sign Up'" :width="'200px'" :onClick="signUp" :isDisabled="isDisabled" :variant="'important'" />
     </div>
   </div>
 </template>
@@ -46,19 +46,6 @@ function goBack() {
 .input-container {
   display: flex;
   flex-direction: column;
-}
-
-.container {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: hsla(0, 0%, 0%, 0.5);
 }
 
 .content {

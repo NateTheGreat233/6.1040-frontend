@@ -115,7 +115,10 @@ class Routes {
   @Router.get("/exclusiveFriend")
   async getExclusiveFriend(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
-    return await ExclusiveFriend.getExclusiveFriend(user);
+    const friendId = await ExclusiveFriend.getExclusiveFriend(user);
+    const friendUser = await User.getUserById(friendId);
+    const friendProfile = await Profile.getProfile(friendId);
+    return { name: friendProfile.profile.name, username: friendUser.username };
   }
 
   @Router.get("/exclusiveFriend/requested")
@@ -193,7 +196,7 @@ class Routes {
       return { msg: "Unable to create user" };
     }
     await Profile.setProfile(user._id, { name });
-    return { msg };
+    return { msg, user };
   }
 
   @Router.patch("/users")

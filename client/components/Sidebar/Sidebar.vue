@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
 import DuetButton from "../../components/DuetButton/DuetButton.vue";
 import router from "../../router";
 import { useDualProfileStore } from "../../stores/dualProfile";
@@ -12,6 +15,9 @@ const profileStore = useProfileStore();
 const siteStore = useSiteStore();
 const dualProfileStore = useDualProfileStore();
 const exclusiveFriendStore = useExclusiveFriendStore();
+const { exclusiveFriend } = storeToRefs(useExclusiveFriendStore());
+const selectedTab = ref<string>();
+const route = useRoute();
 
 const onSignOut = async () => {
   await logoutUser();
@@ -20,6 +26,12 @@ const onSignOut = async () => {
   dualProfileStore.resetStore();
   exclusiveFriendStore.resetStore();
 };
+
+watchEffect(() => {
+  if (route.name) {
+    selectedTab.value = route.name.toString();
+  }
+});
 
 const routeTo = (name: string) => {
   router.push({ name });
@@ -31,13 +43,22 @@ const routeTo = (name: string) => {
     <div class="content-container">
       <div class="top-buttons">
         <div>
-          <DuetButton :text="'Relationship'" :width="'150px'" :height="'50px'" :onClick="() => routeTo('Relationship')" />
-          <DuetButton :text="'Create Post'" :width="'100px'" :height="'50px'" :onClick="() => {}" />
-          <DuetButton :text="'Edit'" :width="'100px'" :height="'50px'" :onClick="() => {}" />
+          <DuetButton :text="'Relationship'" :width="'200px'" :height="'50px'" :onClick="() => routeTo('Relationship')" :selected="selectedTab === 'Relationship'" />
+          <DuetButton
+            :text="'Edit'"
+            :width="'150px'"
+            :height="'50px'"
+            :onClick="() => routeTo('Edit Relationship')"
+            :isDisabled="exclusiveFriend === undefined"
+            :selected="selectedTab === 'Edit Relationship'"
+          />
         </div>
-        <DuetButton :text="'Feed'" :width="'150px'" :height="'50px'" :onClick="() => routeTo('Feed')" />
+        <div>
+          <DuetButton :text="'My Posts'" :width="'200px'" :height="'50px'" :onClick="() => routeTo('My Posts')" :isDisabled="exclusiveFriend === undefined" :selected="selectedTab === 'My Posts'" />
+        </div>
+        <DuetButton :text="'Feed'" :width="'200px'" :height="'50px'" :onClick="() => routeTo('Feed')" :selected="selectedTab === 'Feed'" />
       </div>
-      <DuetButton :text="'Sign Out'" :width="'150px'" :height="'50px'" :onClick="onSignOut" />
+      <DuetButton :text="'Sign Out'" :width="'200px'" :height="'50px'" :onClick="onSignOut" />
     </div>
   </div>
 </template>
@@ -56,6 +77,7 @@ const routeTo = (name: string) => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 20px;
 }
 
 .container {
@@ -64,9 +86,9 @@ const routeTo = (name: string) => {
   align-items: center;
   height: 100%;
   min-height: calc(100% - var(--nav-bar-height));
-  min-width: 200px;
-  max-width: 200px;
-  border-width: 0px 2px 0px 0px;
+  min-width: var(--side-bar-width);
+  max-width: var(--side-bar-width);
+  border-width: 0px 1.5px 0px 0px;
   border-color: black;
   border-style: solid;
 }
