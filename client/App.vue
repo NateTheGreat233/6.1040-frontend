@@ -61,8 +61,9 @@ watchEffect(async () => {
     ];
     try {
       await Promise.all(actionsToComplete);
-      router.push({ name: "Relationship" });
     } catch {}
+
+    router.push({ name: "Relationship" });
   }
 });
 
