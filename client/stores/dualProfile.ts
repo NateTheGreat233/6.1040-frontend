@@ -19,13 +19,6 @@ export const useDualProfileStore = defineStore(
       isDeletingRelationship.value = value;
     };
 
-    // @Router.post("/dualProfile/update/scrapbook")
-    // async addToScrapbook(session: WebSessionDoc, caption: string, image: Image, date: Date) {
-    //   const imageData = new Uint8Array(Object.values(JSON.parse(image.buffer)));
-    //   const user = WebSession.getUser(session);
-    //   return await DualProfile.addToScrapbook(user, { image: { ...image, buffer: imageData }, caption, date });
-    // }
-
     const addToScrapbook = async (date: Date, caption: string, image: { buffer: string; mimeType: string }) => {
       await fetchy("/api/dualProfile/update/scrapbook", "POST", {
         body: {
@@ -53,6 +46,11 @@ export const useDualProfileStore = defineStore(
       scrapbook.value = response.dualProfile.scrapbook;
     };
 
+    const deleteScrapbookEntry = async (id: string): Promise<void> => {
+      await fetchy(`/api/dualProfile/scrapbook/delete/${id}`, "DELETE", {});
+      await fetchDualProfile();
+    };
+
     const resetStore = (): void => {
       startDate.value = dateToInputValue(new Date());
       scrapbook.value = [];
@@ -65,6 +63,7 @@ export const useDualProfileStore = defineStore(
       scrapbook,
       isAddingScrapbookEntry,
       isDeletingRelationship,
+      deleteScrapbookEntry,
       fetchDualProfile,
       resetStore,
       addToScrapbook,

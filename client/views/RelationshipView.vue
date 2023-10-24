@@ -18,10 +18,9 @@ const { fetchingExclusiveFriend, exclusiveFriend, requestedFriend, errorMsg } = 
 
 <style scoped>
 .relationship-container {
-  width: calc(100% - var(--side-bar-width));
-  max-width: calc(100% - var(--side-bar-width));
-  max-width: 100%;
-  height: calc(100% - var(--nav-bar-height));
+  width: calc(100% - var(--side-bar-width) - 5px);
+  max-width: calc(100% - var(--side-bar-width) - 5px);
+  height: 100%;
   max-height: 100%;
   padding-right: var(--page-side-padding);
   padding-left: var(--page-side-padding);

@@ -53,6 +53,12 @@ class Routes {
     return await DualProfile.addToScrapbook(user, { image: { ...image, buffer: imageData }, caption, date });
   }
 
+  @Router.delete("/dualProfile/scrapbook/delete/:id")
+  async deleteFromScrapbook(session: WebSessionDoc, id: string) {
+    const user = WebSession.getUser(session);
+    return await DualProfile.deleteFromScrapbook(user, id);
+  }
+
   // ********** DUAL POST ROUTES **********
 
   @Router.post("/post")

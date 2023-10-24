@@ -8,6 +8,7 @@ import { computed, onBeforeMount, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import Navbar from "./components/Navbar/Navbar.vue";
 import Sidebar from "./components/Sidebar/Sidebar.vue";
+import { useDualPostStore } from "./stores/dualPost";
 import { useDualProfileStore } from "./stores/dualProfile";
 import { useExclusiveFriendStore } from "./stores/exclusiveFriend";
 import { useProfileStore } from "./stores/profile";
@@ -20,6 +21,7 @@ const siteStore = useSiteStore();
 const { isLoggedIn, currentUsername } = storeToRefs(userStore);
 const { modalVisible } = storeToRefs(siteStore);
 const { fetchExclusiveFriend, fetchRequestedExclusiveFriend } = useExclusiveFriendStore();
+const { fetchAllPosts, fetchPersonalPosts } = useDualPostStore();
 const { fetchProfile } = useProfileStore();
 const { fetchDualProfile } = useDualProfileStore();
 const { toast } = storeToRefs(useToastStore());
@@ -54,9 +56,12 @@ watchEffect(async () => {
       fetchRequestedExclusiveFriend(),
       fetchProfile(currentUsername.value),
       fetchDualProfile(),
+      fetchPersonalPosts(),
+      fetchAllPosts(),
     ];
     try {
       await Promise.all(actionsToComplete);
+      router.push({ name: "Relationship" });
     } catch {}
   }
 });
@@ -95,7 +100,8 @@ const initialize = () => {
 .page-layout {
   display: flex;
   width: 100%;
-  height: 100%;
+  max-width: 100vw;
+  height: calc(100% - var(--nav-bar-height));
   flex-direction: row;
 }
 

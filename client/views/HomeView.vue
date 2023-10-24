@@ -2,10 +2,8 @@
 import DuetButton from "@/components/DuetButton/DuetButton.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { watchEffect } from "vue";
 import LoginModal from "../components/Modal/LoginModal.vue";
 import SignUpModal from "../components/Modal/SignUpModal.vue";
-import router from "../router";
 import { useSiteStore } from "../stores/site";
 
 const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
@@ -16,11 +14,11 @@ const signUp = (): void => {
   siteStore.setIsSigningUp(true);
 };
 
-watchEffect(() => {
-  if (isLoggedIn) {
-    router.push({ name: "Relationship" });
-  }
-});
+// watchEffect(() => {
+//   if (isLoggedIn) {
+//     router.push({ name: "Relationship" });
+//   }
+// });
 </script>
 
 <template>

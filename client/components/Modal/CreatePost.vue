@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useDualProfileStore } from "../../stores/dualProfile";
+import { useDualPostStore } from "../../stores/dualPost";
 import DuetButton from "../DuetButton/DuetButton.vue";
 
-const { setIsAddingScrapbookEntry, addToScrapbook } = useDualProfileStore();
-const date = ref<string>();
+const { proposePost, setIsCreatingPost } = useDualPostStore();
+const caption = ref<string>();
 const imageBuffer = ref<string>();
 const mimeType = ref<string>();
 
 const goBack = () => {
-  setIsAddingScrapbookEntry(false);
+  setIsCreatingPost(false);
 };
 
 const onSubmit = async () => {
-  if ([date, imageBuffer, mimeType].some((ref) => !ref.value)) return;
-  await addToScrapbook(new Date(date.value as string), "", { buffer: imageBuffer.value as string, mimeType: mimeType.value as string });
+  await proposePost(caption.value as string, { buffer: imageBuffer.value as string, mimeType: mimeType.value as string });
   goBack();
 };
 
 const isDisabled = computed(() => {
-  return [date, imageBuffer, mimeType].some((ref) => ref.value === undefined);
+  return [imageBuffer, mimeType, caption].some((ref) => ref.value === undefined || ref.value === "");
 });
 
 const handleChangeFile = async (e: any) => {
@@ -34,11 +33,12 @@ const handleChangeFile = async (e: any) => {
 <template>
   <div class="modal-container" @click="goBack">
     <div class="content" v-on:click.stop>
-      <h1 class="large-text" style="margin: 0px">Add Scrapbook Entry</h1>
+      <h1 class="large-text" style="margin: 0px; margin-bottom: 20px">Create Post</h1>
+      <h2 class="medium-text" style="margin: 0px">Note that your significant other must approve the post before it is officially posted.</h2>
       <div class="field-container">
         <div class="row gap">
-          <h2>Date of Event</h2>
-          <input type="date" v-model="date" class="textField" />
+          <h2>Caption</h2>
+          <input type="text" v-model="caption" class="textField" placeholder="Add a caption here" />
         </div>
         <div class="row gap">
           <h2>Image</h2>

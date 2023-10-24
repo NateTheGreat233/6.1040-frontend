@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CometChat } from "@cometchat-pro/chat";
+import moment from "moment";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useDualProfileStore } from "../../stores/dualProfile";
@@ -21,21 +22,25 @@ const isInCall = ref<boolean>(false);
 const currentCallId = ref<string>();
 const dateString = computed(() => dateToTime(new Date(startDate.value)));
 
-const generatePrompt = async (): Promise<void> => {};
-
 const dateToTime = (date: Date): string => {
-  const now = new Date();
-  const yearDiff = now.getFullYear() - date.getFullYear();
-  const monthDiff = now.getMonth() - date.getMonth();
-  const dayDiff = now.getDate() - date.getDate();
+  const dateMoment = moment(date);
+  const nowMoment = moment(new Date());
+
   let out = "";
+  const yearDiff = nowMoment.diff(dateMoment, "years");
   if (yearDiff > 0) {
     out += `${yearDiff} years, `;
   }
+  dateMoment.add(yearDiff, "years");
+
+  const monthDiff = nowMoment.diff(dateMoment, "months");
   if (monthDiff > 0) {
     out += `${monthDiff} months, `;
   }
-  out += `${dayDiff} days`;
+  dateMoment.add(monthDiff, "months");
+
+  const days = nowMoment.diff(dateMoment, "days");
+  out += `${days} days`;
   return out;
 };
 
@@ -261,8 +266,7 @@ const cancelCall = async (): Promise<void> => {
   align-items: flex-start;
   max-width: 50%;
   width: 45%;
-  height: calc(100% - 100px);
-  max-height: calc(100% - 100px);
+  height: 100%;
 }
 
 .left-side {
@@ -271,8 +275,7 @@ const cancelCall = async (): Promise<void> => {
   align-items: flex-start;
   max-width: 50%;
   width: 50%;
-  min-height: calc(100% - 100px);
-  max-height: calc(100% - 100px);
+  height: 100%;
 }
 
 .dual-profile-content {
@@ -281,7 +284,7 @@ const cancelCall = async (): Promise<void> => {
   justify-content: space-between;
   width: 100%;
   max-width: 100%;
-  height: 100%;
+  height: calc(100% - 100px);
 }
 
 .gap {
