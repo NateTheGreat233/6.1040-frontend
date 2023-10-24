@@ -18,6 +18,7 @@ export const useUserStore = defineStore(
     const createUser = async (name: string, username: string, password: string) => {
       await fetchy("/api/users", "POST", {
         body: { name, username, password },
+        alert: true,
       });
       const newCometChatUser = new CometChat.User(username);
       newCometChatUser.setName(name);
@@ -27,6 +28,7 @@ export const useUserStore = defineStore(
     const loginUser = async (username: string, password: string) => {
       await fetchy("/api/login", "POST", {
         body: { username, password },
+        alert: true,
       });
       await CometChat.login(username, import.meta.env.VITE_COMET_CHAT_API_KEY);
     };
